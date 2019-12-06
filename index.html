@@ -1,58 +1,91 @@
 <html>
-
-<div id="bar-box" style="
-position:absolute;
-width:100%;
-height:50%;
-background: black;">
-</div>
-
+  <div
+    id="button-options"
+    style="
+    margin-top: 20px;
+    cursor: pointer;"
+  ></div>
+  <div
+    id="bar-box"
+    style="
+    position:absolute;
+    width:100%;
+    height:50%;
+    background: black;"
+  ></div>
 </html>
 
 <style>
-.bar{
+  .bar {
     position: absolute;
     background: rgb(255, 255, 255);
     width: 5%;
     bottom: 0%;
-    border:1px solid black;"
-}
+    border: 1px solid black;
+  }
 </style>
 
 <script>
-    function newEl(el){
-        return document.createElement(el);
+  function newEl(el) {
+    return document.createElement(el);
+  }
+  function append(parent, child) {
+    parent.appendChild(child); // can only pass nodes as child
+  }
+  function getEl(el) {
+    return document.getElementById(el);
+  }
+
+  const MAX_VALUE = 7;
+  const NUMS = 9;
+
+  var nums = [];
+  var tracker = 0;
+
+  for (let i = 0; i < NUMS; i++) {
+    nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+    // a number from Math.ceil returns a rounds number
+    // push then number to the array
+  }
+
+  for (let value of nums) {
+    // JS For loop
+    let bar = newEl("div"); // creates new div
+    bar.className = "bar"; // Links styling to the bar class
+    bar.style.left = tracker + "%"; // moves the bar to left
+    bar.style.height = (value / MAX_VALUE) * 100 + "%"; // gets the correct height of each bar
+    append(getEl("bar-box"), bar); // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+    // which return a node and append child only accept a node.
+    tracker += 5;
+  }
+  /*
+  var button = newEl(button);
+  button.innerHTML = "Randomize";
+  append(getEl("button-options"), button);
+  button.addEventListener("click", function() {
+    while (getEl("bar-box").firstChild) {
+      getEl("bar-box").removeChild(getEl("bar-box").firstChild);
+      getEl("bar-box").innerHTML = "";
+      tracker = 0;
+      console.log(tracker);
     }
-    function append(parent,child){
-        parent.appendChild(child) // can only pass nodes as child
+    for (let i = 0; i < NUMS; i++) {
+      nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+      // a number from Math.ceil returns a rounds number
+      // push then number to the array
     }
-    function getEl(el){
-        return document.getElementById(el);
+
+    for (let value of nums) {
+      // JS For loop
+      let bar = newEl("div"); // creates new div
+      bar.className = "bar"; // Links styling to the bar class
+      bar.style.left = tracker + "%"; // moves the bar to left
+      bar.style.height = (value / MAX_VALUE) * 100 + "%"; // gets the correct height of each bar
+      append(getEl("bar-box"), bar); // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+      // which return a node and append child only accept a node.
+      tracker += 5;
     }
-
-const MAX_VALUE = 7;
-const NUMS = 5;
-
-var nums = [];
-var tracker = 0;
-
-for(let i = 0;i<NUMS;i++){
-    nums.push(Math.ceil(Math.random()*MAX_VALUE))   // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
-                                                    // a number from Math.ceil returns a rounds number
-                                                    // push then number to the array
-}
-
-for(let value of nums){ // JS For loop
-    let bar = newEl('div'); // creates new div
-        bar.className = 'bar'; // Links styling to the bar class
-        bar.style.left = tracker + '%' // moves the bar to left
-        bar.style.height = ((value/MAX_VALUE)*100) +  '%' // gets the correct height of each bar
-        append(getEl('bar-box'), bar);  // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
-                                        // which return a node and append child only accept a node.
-        tracker+=5;
-}
-
-// gonna need to use set interval to help sort
-
+  });
+    */
+  // gonna need to use set interval to help sort
 </script>
-

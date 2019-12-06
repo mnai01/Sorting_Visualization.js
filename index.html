@@ -41,6 +41,15 @@
 
   var nums = [];
   var tracker = 0;
+  var button_refresh = newEl("button");
+    append(button_refresh,document.createTextNode("Refresh"));
+    append(getEl('button-refresh'), button_refresh);
+
+    $( '#button_refresh' ).click(function() { 
+         $('#refresh').html( 'content for the div' ); 
+         alert( "Handler for .click() called." );
+         console.log("button clicked")
+    });
 
   for (let i = 0; i < NUMS; i++) {
     nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7

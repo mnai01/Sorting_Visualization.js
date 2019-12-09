@@ -6,6 +6,16 @@
     cursor: pointer;"
   ></div>
   <div
+    id="counter"
+    style="
+    background: black;
+    width:100%;
+    height:5%;
+    color:white"
+  >
+    <h3 id="swaps">Swaps:</h3>
+  </div>
+  <div
     id="bar-box"
     style="
     position:absolute;
@@ -24,6 +34,7 @@
     border: 1px solid black;
   }
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 <script>
   function newEl(el) {
@@ -35,6 +46,64 @@
   function getEl(el) {
     return document.getElementById(el);
   }
+  function loadSorted() {
+    while (getEl("bar-box").firstChild) {
+      getEl("bar-box").removeChild(getEl("bar-box").firstChild);
+      // sets tracker back to 0
+      tracker = 0;
+    }
+    // JS For loop
+    for (let value of nums) {
+      // creates new div
+      let bar = newEl("div");
+      // Links styling to the bar class
+      bar.className = "bar";
+      // moves the bar to left
+      bar.style.left = tracker + "%";
+      // gets the correct height of each bar
+      bar.style.height = (value / MAX_VALUE) * 100 + "%";
+      // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+      // which return a node and append child only accept a node.
+      tracker += 5;
+      append(getEl("bar-box"), bar);
+      console.log(value);
+    }
+  }
+
+  function loadNew() {
+    for (let i = 0; i < NUMS; i++) {
+      // removes all elements from array
+      nums.pop();
+    }
+    // Removes all div's that exist as childen in the bar-box div
+    while (getEl("bar-box").firstChild) {
+      getEl("bar-box").removeChild(getEl("bar-box").firstChild);
+      // sets tracker back to 0
+      tracker = 0;
+    }
+    for (let i = 0; i < NUMS; i++) {
+      // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+      // a number from Math.ceil returns a rounds number
+      // push then number to the array
+      nums.push(Math.ceil(Math.random() * MAX_VALUE));
+    }
+    // JS For loop
+    for (let value of nums) {
+      // creates new div
+      let bar = newEl("div");
+      // Links styling to the bar class
+      bar.className = "bar";
+      // moves the bar to left
+      bar.style.left = tracker + "%";
+      // gets the correct height of each bar
+      bar.style.height = (value / MAX_VALUE) * 100 + "%";
+      // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+      // which return a node and append child only accept a node.
+      tracker += 5;
+      append(getEl("bar-box"), bar);
+      console.log(value);
+    }
+  }
 
   const MAX_VALUE = 7;
   const NUMS = 9;
@@ -42,14 +111,13 @@
   var nums = [];
   var tracker = 0;
   var button_refresh = newEl("button");
-    append(button_refresh,document.createTextNode("Refresh"));
-    append(getEl('button-refresh'), button_refresh);
+  append(button_refresh, document.createTextNode("Refresh"));
+  append(getEl("button-options"), button_refresh);
 
-    $( '#button_refresh' ).click(function() { 
-         $('#refresh').html( 'content for the div' ); 
-         alert( "Handler for .click() called." );
-         console.log("button clicked")
-    });
+  //why the div ID and not the button here?
+  $("#button-options").on("click", function() {
+    $("#bar-box").html(loadNew);
+  });
 
   for (let i = 0; i < NUMS; i++) {
     nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
@@ -67,34 +135,56 @@
     // which return a node and append child only accept a node.
     tracker += 5;
   }
-  /*
-  var button = newEl(button);
-  button.innerHTML = "Randomize";
-  append(getEl("button-options"), button);
-  button.addEventListener("click", function() {
-    while (getEl("bar-box").firstChild) {
-      getEl("bar-box").removeChild(getEl("bar-box").firstChild);
-      getEl("bar-box").innerHTML = "";
-      tracker = 0;
-      console.log(tracker);
-    }
-    for (let i = 0; i < NUMS; i++) {
-      nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
-      // a number from Math.ceil returns a rounds number
-      // push then number to the array
-    }
 
-    for (let value of nums) {
-      // JS For loop
-      let bar = newEl("div"); // creates new div
-      bar.className = "bar"; // Links styling to the bar class
-      bar.style.left = tracker + "%"; // moves the bar to left
-      bar.style.height = (value / MAX_VALUE) * 100 + "%"; // gets the correct height of each bar
-      append(getEl("bar-box"), bar); // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
-      // which return a node and append child only accept a node.
-      tracker += 5;
+  function bubbleSort() {
+    for (var j = 0; j < nums.length - 1 - marker; j++) {
+      if (nums[j] > nums[j + 1]) {
+        //console.log(nums[j] + " " + nums[j + 1]);
+        var temp;
+        temp = nums[j];
+        nums[j] = nums[j + 1];
+        swaps++;
+        nums[j + 1] = temp;
+        // MAYBE
+        // this seems to only update once the scope has left the if statement
+        $("#bar-box").html(loadSorted);
+      }
     }
-  });
-    */
+    marker++;
+  }
+  var swaps = 0;
+  var marker = 0;
+  if (marker < MAX_VALUE - 1) {
+    setInterval(bubbleSort, 500);
+  }
+  /*
+    var button = newEl(button);
+    button.innerHTML = "Randomize";
+    append(getEl("button-options"), button);
+    button.addEventListener("click", function() {
+      while (getEl("bar-box").firstChild) {
+        getEl("bar-box").removeChild(getEl("bar-box").firstChild);
+        getEl("bar-box").innerHTML = "";
+        tracker = 0;
+        console.log(tracker);
+      }
+      for (let i = 0; i < NUMS; i++) {
+        nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+        // a number from Math.ceil returns a rounds number
+        // push then number to the array
+      }
+
+      for (let value of nums) {
+        // JS For loop
+        let bar = newEl("div"); // creates new div
+        bar.className = "bar"; // Links styling to the bar class
+        bar.style.left = tracker + "%"; // moves the bar to left
+        bar.style.height = (value / MAX_VALUE) * 100 + "%"; // gets the correct height of each bar
+        append(getEl("bar-box"), bar); // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+        // which return a node and append child only accept a node.
+        tracker += 5;
+      }
+    });
+      */
   // gonna need to use set interval to help sort
 </script>

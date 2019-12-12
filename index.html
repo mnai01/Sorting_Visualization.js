@@ -29,7 +29,6 @@
   .bar {
     position: absolute;
     background: rgb(255, 255, 255);
-    width: 5%;
     bottom: 0%;
     border: 1px solid black;
   }
@@ -62,9 +61,10 @@
       bar.style.left = tracker + "%";
       // gets the correct height of each bar
       bar.style.height = (value / MAX_VALUE) * 100 + "%";
+      bar.style.width = (100 / NUMS)+ "%"; // gets the correct width of each bar
       // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
       // which return a node and append child only accept a node.
-      tracker += 5;
+      tracker += (100 / NUMS);
       append(getEl("bar-box"), bar);
       console.log(value);
     }
@@ -97,16 +97,17 @@
       bar.style.left = tracker + "%";
       // gets the correct height of each bar
       bar.style.height = (value / MAX_VALUE) * 100 + "%";
+      bar.style.width = (100 / NUMS)+ "%"; // gets the correct width of each bar
       // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
       // which return a node and append child only accept a node.
-      tracker += 5;
+      tracker += (100 / NUMS);
       append(getEl("bar-box"), bar);
       console.log(value);
     }
   }
 
-  const MAX_VALUE = 7;
-  const NUMS = 9;
+  const MAX_VALUE = 5;
+  const NUMS = 100;
 
   var nums = [];
   var tracker = 0;
@@ -125,37 +126,34 @@
     // push then number to the array
   }
 
-  for (let value of nums) {
-    // JS For loop
-    let bar = newEl("div"); // creates new div
-    bar.className = "bar"; // Links styling to the bar class
-    bar.style.left = tracker + "%"; // moves the bar to left
-    bar.style.height = (value / MAX_VALUE) * 100 + "%"; // gets the correct height of each bar
-    append(getEl("bar-box"), bar); // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
-    // which return a node and append child only accept a node.
-    tracker += 5;
-  }
-
   function bubbleSort() {
-    for (var j = 0; j < nums.length - 1 - marker; j++) {
-      if (nums[j] > nums[j + 1]) {
-        //console.log(nums[j] + " " + nums[j + 1]);
-        var temp;
-        temp = nums[j];
-        nums[j] = nums[j + 1];
-        swaps++;
-        nums[j + 1] = temp;
-        // MAYBE
-        // this seems to only update once the scope has left the if statement
-        $("#bar-box").html(loadSorted);
+    if(i < NUMS){
+      if(j >= NUMS -1 -i){
+        j = 0;
+        i++;
       }
+      if (nums[j] > nums[j + 1]) {
+          //console.log(nums[j] + " " + nums[j + 1]);
+          var temp;
+          temp = nums[j];
+          nums[j] = nums[j + 1];
+          swaps++;
+          nums[j + 1] = temp;
+          // MAYBE
+          // this seems to only update once the scope has left the if statement
+        }
+        j++
     }
+    $("#bar-box").html(loadSorted);
     marker++;
   }
+
   var swaps = 0;
   var marker = 0;
-  if (marker < MAX_VALUE - 1) {
-    setInterval(bubbleSort, 500);
+  var i = 0;
+  var j = 0;
+  if (marker < NUMS) {
+    setInterval(bubbleSort, 1);
   }
   /*
     var button = newEl(button);

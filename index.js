@@ -12,7 +12,7 @@ var swapCount = 0;
 // If i = 1 then that means 1 bar has been iterated
 // all the way to the right and is in its correct position
 var i = 0;
-// Used to iterate through each bar in the array
+// Used to iterate through each bar in the array for BubbleSort
 var j = 0;
 
 // if i (the number of how many bars sorted)
@@ -30,11 +30,12 @@ if (i < NUMS) {
 
 // Fills nums Array
 for (let i = 0; i < NUMS; i++) {
-nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
-// a number from Math.ceil returns a rounds number
-// push then number to the array
+  nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+  // a number from Math.ceil returns a rounds number
+  // push then number to the array
 }
 
+// Adding button to HTML
 var button_refresh = NewEl("button");
 Append(button_refresh, document.createTextNode("Refresh"));
 Append(GetEl("button-options"), button_refresh);
@@ -47,16 +48,30 @@ var button_selectionsort = NewEl("button");
 Append(button_selectionsort, document.createTextNode("Selection Sort"));
 Append(GetEl("button-options"), button_selectionsort);
 
+var button_insertionsort = NewEl("button");
+Append(button_insertionsort, document.createTextNode("Insertion Sort"));
+Append(GetEl("button-options"), button_insertionsort);
+
+// Button click listeners
 button_refresh.addEventListener("click", LoadNew);
-button_bubblesort.addEventListener("click", function(){
+
+button_bubblesort.addEventListener("click", function() {
   if (i < NUMS) {
     setInterval(BubbleSort, 1);
   }
 });
-button_selectionsort.addEventListener("click",  function(){
+
+button_selectionsort.addEventListener("click", function() {
   if (i < NUMS) {
-    console.log(i)
-    setInterval(SelectionSort, 1);
+    console.log(i);
+    setInterval(SelectionSort, 10);
+  }
+});
+
+button_insertionsort.addEventListener("click", function() {
+  if (i < NUMS) {
+    console.log(i);
+    setInterval(InsertionSort, 10);
   }
 });
 
@@ -158,7 +173,7 @@ function CreateBars() {
     // which return a node and append child only accept a node.
     tracker += 100 / NUMS;
     Append(GetEl("bar-box"), bar);
-    
+
     // Commenting this out makes it go so much faster, WHY?
     //console.log(value);
   }
@@ -190,43 +205,55 @@ function BubbleSort() {
 // other in the nums array
 //////////////////////////////////////////////////
 function Swap(j) {
-  var temp;
+  let temp;
   temp = nums[j];
   nums[j] = nums[j + 1];
   nums[j + 1] = temp;
   swapCount++;
-  var test = GetEl("swap-label");
-  var number = test.innerHTML;
+  let test = GetEl("swap-label");
+  let number = test.innerHTML;
   test.innerHTML = "Swaps: " + swapCount;
 
   // idk what this is, can probably delete
   // $("#swaps h3").text("sfdasf");
 }
 
-function Swap2(lhs,rhs) {
-  var temp = nums[rhs];
+function Swap2(lhs, rhs) {
+  let temp = nums[rhs];
   nums[rhs] = nums[lhs];
   nums[lhs] = temp;
   swapCount++;
-  var test = GetEl("swap-label");
-  var number = test.innerHTML;
+  let test = GetEl("swap-label");
+  let number = test.innerHTML;
   test.innerHTML = "Swaps: " + swapCount;
 
   // idk what this is, can probably delete
   // $("#swaps h3").text("sfdasf");
 }
 
-function SelectionSort(){
-  marker = i
-  for (j = i + 1; j < NUMS; j++) {
-    if(nums[marker] > nums[j]){
-        marker = j
-      }
+function SelectionSort() {
+  let marker = i;
+  for (let j = i + 1; j < NUMS; j++) {
+    if (nums[marker] > nums[j]) {
+      marker = j;
     }
-    Swap2(marker,i)
-    i++ 
-    //why does this not increment the global var 
-    // maybe before of the function with setinterval in it
-    $("#bar-box").html(LoadSorted);
+  }
+  Swap2(marker, i);
+  i++;
+  //why does this not increment the global var
+  // maybe before of the function with setinterval in it
+  $("#bar-box").html(LoadSorted);
 }
 
+// DOES VISUALIZE SWAP that happens
+function InsertionSort() {
+  let value = nums[i];
+  let currentIndex = i;
+  while (currentIndex > 0 && nums[currentIndex - 1] > value) {
+    nums[currentIndex] = nums[currentIndex - 1];
+    currentIndex--;
+  }
+  nums[currentIndex] = value;
+  i++;
+  $("#bar-box").html(LoadSorted);
+}

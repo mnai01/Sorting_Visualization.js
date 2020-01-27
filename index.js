@@ -69,11 +69,29 @@ button_selectionsort.addEventListener("click", function() {
 });
 
 button_insertionsort.addEventListener("click", function() {
-  if (i < NUMS) {
-    console.log(i);
-    setInterval(InsertionSort, 10);
-  }
+  runInstS();
 });
+function runInstS() {
+  var insertint = setInterval(InsertionSort, 10);
+
+  function InsertionSort() {
+    let value = nums[i];
+    let currentIndex = i;
+    while (currentIndex > 0 && nums[currentIndex - 1] > value) {
+      nums[currentIndex] = nums[currentIndex - 1];
+      currentIndex--;
+    }
+    nums[currentIndex] = value;
+    i++;
+    $("#bar-box").html(LoadSorted);
+    if (i >= NUMS) {
+      console.log(i);
+      clearInterval(insertint);
+      console.log("cleared");
+      return;
+    }
+  }
+}
 
 // OLD WAY
 /*  why the div ID and not the button here? 
@@ -256,4 +274,10 @@ function InsertionSort() {
   nums[currentIndex] = value;
   i++;
   $("#bar-box").html(LoadSorted);
+  if (i >= NUMS) {
+    console.log(i);
+    clearInterval(insertint);
+    console.log("cleared");
+    return;
+  }
 }

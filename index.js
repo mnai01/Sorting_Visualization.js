@@ -62,15 +62,37 @@ button_bubblesort.addEventListener("click", function() {
 });
 
 button_selectionsort.addEventListener("click", function() {
-  if (i < NUMS) {
-    console.log(i);
-    setInterval(SelectionSort, 10);
-  }
+  outsideSelect();
 });
+
+function outsideSelect() {
+  var secsort = setInterval(SelectionSort, 1);
+
+  function SelectionSort() {
+    let marker = i;
+    for (let j = i + 1; j < NUMS; j++) {
+      if (nums[marker] > nums[j]) {
+        marker = j;
+      }
+    }
+    Swap2(marker, i);
+    i++;
+    //why does this not increment the global var
+    // maybe before of the function with setinterval in it
+    $("#bar-box").html(LoadSorted);
+    if (i >= NUMS) {
+      console.log(i);
+      clearInterval(secsort);
+      console.log("cleared");
+      return;
+    }
+  }
+}
 
 button_insertionsort.addEventListener("click", function() {
   runInstS();
 });
+
 function runInstS() {
   var insertint = setInterval(InsertionSort, 1);
 
@@ -249,7 +271,7 @@ function Swap2(lhs, rhs) {
   // $("#swaps h3").text("sfdasf");
 }
 
-function SelectionSort() {
+function UNUSED_SelectionSort() {
   let marker = i;
   for (let j = i + 1; j < NUMS; j++) {
     if (nums[marker] > nums[j]) {
@@ -261,10 +283,16 @@ function SelectionSort() {
   //why does this not increment the global var
   // maybe before of the function with setinterval in it
   $("#bar-box").html(LoadSorted);
+  if (i >= NUMS) {
+    console.log(i);
+    clearInterval(SelectionSort);
+    console.log("cleared");
+    return;
+  }
 }
 
 // DOES VISUALIZE SWAP that happens
-function InsertionSort() {
+function UNUSED_InsertionSort() {
   let value = nums[i];
   let currentIndex = i;
   while (currentIndex > 0 && nums[currentIndex - 1] > value) {

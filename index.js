@@ -72,7 +72,7 @@ button_insertionsort.addEventListener("click", function() {
   runInstS();
 });
 function runInstS() {
-  var insertint = setInterval(InsertionSort, 10);
+  var insertint = setInterval(InsertionSort, 1);
 
   function InsertionSort() {
     let value = nums[i];
@@ -81,9 +81,9 @@ function runInstS() {
       nums[currentIndex] = nums[currentIndex - 1];
       currentIndex--;
     }
+    $("#bar-box").html(LoadSorted);
     nums[currentIndex] = value;
     i++;
-    $("#bar-box").html(LoadSorted);
     if (i >= NUMS) {
       console.log(i);
       clearInterval(insertint);

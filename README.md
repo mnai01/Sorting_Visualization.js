@@ -1,6 +1,6 @@
 # Sorting_Visualization
 
-#### Sorting options
+## Sorting options
 
 Merge Sort
 

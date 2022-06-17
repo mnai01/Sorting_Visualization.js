@@ -15,6 +15,8 @@ var i = 0;
 // Used to iterate through each bar in the array for BubbleSort
 var j = 0;
 
+// keeps track if reset pressed
+var reset = false;
 // if i (the number of how many bars sorted)
 // is less then NUMS (the number of bars)
 // Then keep running the sort method
@@ -30,89 +32,131 @@ if (i < NUMS) {
 
 // Fills nums Array
 for (let i = 0; i < NUMS; i++) {
-  nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
-  // a number from Math.ceil returns a rounds number
-  // push then number to the array
+    nums.push(Math.ceil(Math.random() * MAX_VALUE)); // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+    // a number from Math.ceil returns a rounds number
+    // push then number to the array
 }
 
 // Adding button to HTML
-var button_refresh = NewEl("button");
-Append(button_refresh, document.createTextNode("Refresh"));
-Append(GetEl("button-options"), button_refresh);
+var button_refresh = NewEl('button');
+Append(button_refresh, document.createTextNode('Refresh'));
+Append(GetEl('button-options'), button_refresh);
 
-var button_bubblesort = NewEl("button");
-Append(button_bubblesort, document.createTextNode("Bubble Sort"));
-Append(GetEl("button-options"), button_bubblesort);
+var button_bubblesort = NewEl('button');
+Append(button_bubblesort, document.createTextNode('Bubble Sort'));
+Append(GetEl('button-options'), button_bubblesort);
 
-var button_selectionsort = NewEl("button");
-Append(button_selectionsort, document.createTextNode("Selection Sort"));
-Append(GetEl("button-options"), button_selectionsort);
+var button_selectionsort = NewEl('button');
+Append(button_selectionsort, document.createTextNode('Selection Sort'));
+Append(GetEl('button-options'), button_selectionsort);
 
-var button_insertionsort = NewEl("button");
-Append(button_insertionsort, document.createTextNode("Insertion Sort"));
-Append(GetEl("button-options"), button_insertionsort);
+var button_insertionsort = NewEl('button');
+Append(button_insertionsort, document.createTextNode('Insertion Sort'));
+Append(GetEl('button-options'), button_insertionsort);
 
 // Button click listeners
-button_refresh.addEventListener("click", LoadNew);
+button_refresh.addEventListener('click', LoadNew);
 
-button_bubblesort.addEventListener("click", function() {
-  if (i < NUMS) {
-    setInterval(BubbleSort, 1);
-  }
+button_bubblesort.addEventListener('click', function () {
+    BubbleSortWrapper();
 });
 
-button_selectionsort.addEventListener("click", function() {
-  outsideSelect();
+button_selectionsort.addEventListener('click', function () {
+    outsideSelect();
 });
 
-function outsideSelect() {
-  var secsort = setInterval(SelectionSort, 1);
+button_insertionsort.addEventListener('click', function () {
+    runInstS();
+});
 
-  function SelectionSort() {
-    let marker = i;
-    for (let j = i + 1; j < NUMS; j++) {
-      if (nums[marker] > nums[j]) {
-        marker = j;
-      }
+// Resets algo
+function resetAlgo(intervalVar) {
+    if (reset) {
+        reset = false;
+        tracker = 0;
+        swapCount = 0;
+        i = 0;
+        j = 0;
+        clearInterval(intervalVar);
     }
-    Swap2(marker, i);
-    i++;
-    //why does this not increment the global var
-    // maybe before of the function with setinterval in it
-    $("#bar-box").html(LoadSorted);
-    if (i >= NUMS) {
-      console.log(i);
-      clearInterval(secsort);
-      console.log("cleared");
-      return;
-    }
-  }
 }
 
-button_insertionsort.addEventListener("click", function() {
-  runInstS();
-});
+//////////////////////////////////////////////////
+// Function Name: BubbleSort(j)
+// Description: sorting method used to sort num array
+// j represents an integer which is a specific index
+// in num array
+//////////////////////////////////////////////////
+function BubbleSortWrapper() {
+    var bbsort = setInterval(BubbleSort, 1);
+    function BubbleSort() {
+        if (i < nums.length) {
+            if (j >= NUMS - 1 - i) {
+                j = 0;
+                i++;
+            }
+            if (nums[j] > nums[j + 1]) {
+                Swap(j);
+            }
+            j++;
+        }
+        $('#bar-box').html(LoadSorted);
+        if (i >= NUMS) {
+            console.log(i);
+            clearInterval(bbsort);
+            console.log('cleared');
+            return;
+        }
+        resetAlgo(bbsort);
+    }
+}
+
+function outsideSelect() {
+    var secsort = setInterval(SelectionSort, 1);
+
+    function SelectionSort() {
+        let marker = i;
+        for (let j = i + 1; j < NUMS; j++) {
+            if (nums[marker] > nums[j]) {
+                marker = j;
+            }
+        }
+        Swap2(marker, i);
+        i++;
+        //why does this not increment the global var
+        // maybe before of the function with setinterval in it
+        $('#bar-box').html(LoadSorted);
+        if (i >= NUMS) {
+            console.log(i);
+            clearInterval(secsort);
+            console.log('cleared');
+            return;
+        }
+        resetAlgo(secsort);
+    }
+}
 
 function runInstS() {
-  var insertint = setInterval(InsertionSort, 1);
+    var insertint = setInterval(InsertionSort, 1);
 
-  function InsertionSort() {
-    let value = nums[i];
-    let currentIndex = i;
-    while (currentIndex > 0 && nums[currentIndex - 1] > value) {
-      nums[currentIndex] = nums[currentIndex - 1];
-      currentIndex--;
+    function InsertionSort() {
+        let value = nums[i];
+        let currentIndex = i;
+        while (currentIndex > 0 && nums[currentIndex - 1] > value) {
+            nums[currentIndex] = nums[currentIndex - 1];
+            currentIndex--;
+        }
+        $('#bar-box').html(LoadSorted);
+        nums[currentIndex] = value;
+        i++;
+        if (i >= NUMS) {
+            console.log(i);
+            clearInterval(insertint);
+            console.log('cleared');
+            return;
+        }
+        resetAlgo(insertint);
     }
-    $("#bar-box").html(LoadSorted);
-    nums[currentIndex] = value;
-    i++;
-    if (i >= NUMS) {
-      console.log(i);
-      clearInterval(insertint);
-      console.log("cleared");
-      return;
-    }
-  }
 }
 
 // OLD WAY
@@ -126,7 +170,7 @@ $("#button-options").on("click", function() {
 // Description: Helper Function
 //////////////////////////////////////////////////
 function NewEl(el) {
-  return document.createElement(el);
+    return document.createElement(el);
 }
 
 //////////////////////////////////////////////////
@@ -134,7 +178,7 @@ function NewEl(el) {
 // Description: Helper Function
 //////////////////////////////////////////////////
 function Append(parent, child) {
-  parent.appendChild(child); // can only pass nodes as child
+    parent.appendChild(child); // can only pass nodes as child
 }
 
 //////////////////////////////////////////////////
@@ -142,7 +186,7 @@ function Append(parent, child) {
 // Description: Helper Function
 //////////////////////////////////////////////////
 function GetEl(el) {
-  return document.getElementById(el);
+    return document.getElementById(el);
 }
 
 //////////////////////////////////////////////////
@@ -153,16 +197,16 @@ function GetEl(el) {
 // to show the new updated version after each swap iteration
 //////////////////////////////////////////////////
 function LoadSorted() {
-  // Removes the current list from the div
-  while (GetEl("bar-box").firstChild) {
-    GetEl("bar-box").removeChild(GetEl("bar-box").firstChild);
-    // sets tracker back to 0, this is nessesary since ever bar is going to be reloaded
-    // again to show the new updated list
-    tracker = 0;
-  }
-  // Running createbars will add the bars to the screen again but this time
-  // it will appear in the updated order after each swap iteration.
-  CreateBars();
+    // Removes the current list from the div
+    while (GetEl('bar-box').firstChild) {
+        GetEl('bar-box').removeChild(GetEl('bar-box').firstChild);
+        // sets tracker back to 0, this is nessesary since ever bar is going to be reloaded
+        // again to show the new updated list
+        tracker = 0;
+    }
+    // Running createbars will add the bars to the screen again but this time
+    // it will appear in the updated order after each swap iteration.
+    CreateBars();
 }
 
 //////////////////////////////////////////////////
@@ -171,25 +215,26 @@ function LoadSorted() {
 // It then calls CreateBars which creates the actual bars on the page
 //////////////////////////////////////////////////
 function LoadNew() {
-  for (let i = 0; i < NUMS; i++) {
-    // removes all elements from array
-    nums.pop();
-  }
-  // Removes all div's that exist as childen in the bar-box div
-  while (GetEl("bar-box").firstChild) {
-    GetEl("bar-box").removeChild(GetEl("bar-box").firstChild);
-    // sets tracker back to 0
-    tracker = 0;
-    // resets how many bars have already been sorted to 0
-    i = 0;
-  }
-  for (let i = 0; i < NUMS; i++) {
-    // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
-    // a number from Math.ceil returns a rounds number
-    // push then number to the array
-    nums.push(Math.ceil(Math.random() * MAX_VALUE));
-  }
-  CreateBars();
+    reset = true;
+    for (let i = 0; i < NUMS; i++) {
+        // removes all elements from array
+        nums.pop();
+    }
+    // Removes all div's that exist as childen in the bar-box div
+    while (GetEl('bar-box').firstChild) {
+        GetEl('bar-box').removeChild(GetEl('bar-box').firstChild);
+        // sets tracker back to 0
+        tracker = 0;
+        // resets how many bars have already been sorted to 0
+        i = 0;
+    }
+    for (let i = 0; i < NUMS; i++) {
+        // Math random only gives numver from 0.0 - 1.0 then multiple it by 7
+        // a number from Math.ceil returns a rounds number
+        // push then number to the array
+        nums.push(Math.ceil(Math.random() * MAX_VALUE));
+    }
+    CreateBars();
 }
 
 //////////////////////////////////////////////////
@@ -198,45 +243,25 @@ function LoadNew() {
 // in unsorted order on the page
 //////////////////////////////////////////////////
 function CreateBars() {
-  // JS For loop
-  for (let value of nums) {
-    // creates new div
-    let bar = NewEl("div");
-    // Links styling to the bar class
-    bar.className = "bar";
-    // moves the bar to left
-    bar.style.left = tracker + "%";
-    // gets the correct height of each bar
-    bar.style.height = (value / MAX_VALUE) * 100 + "%";
-    bar.style.width = 100 / NUMS + "%"; // gets the correct width of each bar
-    // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
-    // which return a node and append child only accept a node.
-    tracker += 100 / NUMS;
-    Append(GetEl("bar-box"), bar);
+    // JS For loop
+    for (let value of nums) {
+        // creates new div
+        let bar = NewEl('div');
+        // Links styling to the bar class
+        bar.className = 'bar';
+        // moves the bar to left
+        bar.style.left = tracker + '%';
+        // gets the correct height of each bar
+        bar.style.height = (value / MAX_VALUE) * 100 + '%';
+        bar.style.width = 100 / NUMS + '%'; // gets the correct width of each bar
+        // Adds bar to 'bar-box'. Need to pass in 'bar-box' as getEl('bar-box') because it return document.getElementById
+        // which return a node and append child only accept a node.
+        tracker += 100 / NUMS;
+        Append(GetEl('bar-box'), bar);
 
-    // Commenting this out makes it go so much faster, WHY?
-    //console.log(value);
-  }
-}
-
-//////////////////////////////////////////////////
-// Function Name: BubbleSort(j)
-// Description: sorting method used to sort num array
-// j represents an integer which is a specific index
-// in num array
-//////////////////////////////////////////////////
-function BubbleSort() {
-  if (i < NUMS) {
-    if (j >= NUMS - 1 - i) {
-      j = 0;
-      i++;
+        // Commenting this out makes it go so much faster, WHY?
+        //console.log(value);
     }
-    if (nums[j] > nums[j + 1]) {
-      Swap(j);
-    }
-    j++;
-  }
-  $("#bar-box").html(LoadSorted);
 }
 
 //////////////////////////////////////////////////
@@ -245,67 +270,67 @@ function BubbleSort() {
 // other in the nums array
 //////////////////////////////////////////////////
 function Swap(j) {
-  let temp;
-  temp = nums[j];
-  nums[j] = nums[j + 1];
-  nums[j + 1] = temp;
-  swapCount++;
-  let test = GetEl("swap-label");
-  let number = test.innerHTML;
-  test.innerHTML = "Swaps: " + swapCount;
+    let temp;
+    temp = nums[j];
+    nums[j] = nums[j + 1];
+    nums[j + 1] = temp;
+    swapCount++;
+    let test = GetEl('swap-label');
+    let number = test.innerHTML;
+    test.innerHTML = 'Swaps: ' + swapCount;
 
-  // idk what this is, can probably delete
-  // $("#swaps h3").text("sfdasf");
+    // idk what this is, can probably delete
+    // $("#swaps h3").text("sfdasf");
 }
 
 function Swap2(lhs, rhs) {
-  let temp = nums[rhs];
-  nums[rhs] = nums[lhs];
-  nums[lhs] = temp;
-  swapCount++;
-  let test = GetEl("swap-label");
-  let number = test.innerHTML;
-  test.innerHTML = "Swaps: " + swapCount;
+    let temp = nums[rhs];
+    nums[rhs] = nums[lhs];
+    nums[lhs] = temp;
+    swapCount++;
+    let test = GetEl('swap-label');
+    let number = test.innerHTML;
+    test.innerHTML = 'Swaps: ' + swapCount;
 
-  // idk what this is, can probably delete
-  // $("#swaps h3").text("sfdasf");
+    // idk what this is, can probably delete
+    // $("#swaps h3").text("sfdasf");
 }
 
 function UNUSED_SelectionSort() {
-  let marker = i;
-  for (let j = i + 1; j < NUMS; j++) {
-    if (nums[marker] > nums[j]) {
-      marker = j;
+    let marker = i;
+    for (let j = i + 1; j < NUMS; j++) {
+        if (nums[marker] > nums[j]) {
+            marker = j;
+        }
     }
-  }
-  Swap2(marker, i);
-  i++;
-  //why does this not increment the global var
-  // maybe before of the function with setinterval in it
-  $("#bar-box").html(LoadSorted);
-  if (i >= NUMS) {
-    console.log(i);
-    clearInterval(SelectionSort);
-    console.log("cleared");
-    return;
-  }
+    Swap2(marker, i);
+    i++;
+    //why does this not increment the global var
+    // maybe before of the function with setinterval in it
+    $('#bar-box').html(LoadSorted);
+    if (i >= NUMS) {
+        console.log(i);
+        clearInterval(SelectionSort);
+        console.log('cleared');
+        return;
+    }
 }
 
 // DOES VISUALIZE SWAP that happens
 function UNUSED_InsertionSort() {
-  let value = nums[i];
-  let currentIndex = i;
-  while (currentIndex > 0 && nums[currentIndex - 1] > value) {
-    nums[currentIndex] = nums[currentIndex - 1];
-    currentIndex--;
-  }
-  nums[currentIndex] = value;
-  i++;
-  $("#bar-box").html(LoadSorted);
-  if (i >= NUMS) {
-    console.log(i);
-    clearInterval(insertint);
-    console.log("cleared");
-    return;
-  }
+    let value = nums[i];
+    let currentIndex = i;
+    while (currentIndex > 0 && nums[currentIndex - 1] > value) {
+        nums[currentIndex] = nums[currentIndex - 1];
+        currentIndex--;
+    }
+    nums[currentIndex] = value;
+    i++;
+    $('#bar-box').html(LoadSorted);
+    if (i >= NUMS) {
+        console.log(i);
+        clearInterval(insertint);
+        console.log('cleared');
+        return;
+    }
 }
